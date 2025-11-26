@@ -1,12 +1,45 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 const Home = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [accountType, setAccountType] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      loadAccountType();
+    }
+  }, [user]);
+
+  const loadAccountType = async () => {
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('account_type')
+        .eq('id', user!.id)
+        .single();
+      
+      if (data) {
+        setAccountType(data.account_type);
+      }
+    } catch (error) {
+      console.error('Error loading account type:', error);
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (accountType === 'worker') {
+      navigate('/worker-profile');
+    } else {
+      navigate('/client-profile');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background">
@@ -22,6 +55,10 @@ const Home = () => {
                   <User className="w-4 h-4" />
                   <span>{user.email}</span>
                 </div>
+                <Button variant="outline" size="sm" onClick={handleProfileClick}>
+                  <Settings className="w-4 h-4 ml-2" />
+                  البروفايل
+                </Button>
                 <Button variant="outline" size="sm" onClick={signOut}>
                   <LogOut className="w-4 h-4 ml-2" />
                   تسجيل الخروج
