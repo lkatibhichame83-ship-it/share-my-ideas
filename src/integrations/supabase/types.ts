@@ -44,6 +44,36 @@ export type Database = {
         }
         Relationships: []
       }
+      documents: {
+        Row: {
+          created_at: string
+          document_type: string
+          document_url: string
+          id: string
+          status: Database["public"]["Enums"]["verification_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_type: string
+          document_url: string
+          id?: string
+          status?: Database["public"]["Enums"]["verification_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_type?: string
+          document_url?: string
+          id?: string
+          status?: Database["public"]["Enums"]["verification_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           account_type: Database["public"]["Enums"]["account_type"]
@@ -71,6 +101,72 @@ export type Database = {
           id?: string
           phone_number?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          client_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          worker_id: string
+        }
+        Insert: {
+          client_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          worker_id: string
+        }
+        Update: {
+          client_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          worker_id?: string
+        }
+        Relationships: []
+      }
+      worker_profiles: {
+        Row: {
+          created_at: string
+          description: string | null
+          experience_years: number | null
+          hourly_rate: number | null
+          id: string
+          is_verified: boolean | null
+          specialization: string
+          updated_at: string
+          user_id: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          experience_years?: number | null
+          hourly_rate?: number | null
+          id?: string
+          is_verified?: boolean | null
+          specialization: string
+          updated_at?: string
+          user_id: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          experience_years?: number | null
+          hourly_rate?: number | null
+          id?: string
+          is_verified?: boolean | null
+          specialization?: string
+          updated_at?: string
+          user_id?: string
+          video_url?: string | null
         }
         Relationships: []
       }
