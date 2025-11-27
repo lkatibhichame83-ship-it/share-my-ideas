@@ -1,14 +1,16 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { LogOut, User, Settings, Users, Briefcase } from 'lucide-react';
+import { LogOut, User, Settings, Users, Briefcase, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
 
 const Home = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { isAdmin } = useAdminCheck();
   const [accountType, setAccountType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -51,6 +53,12 @@ const Home = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <>
+                {isAdmin && (
+                  <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>
+                    <Shield className="w-4 h-4 ml-2" />
+                    لوحة التحكم
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" onClick={() => navigate('/workers')}>
                   <Users className="w-4 h-4 ml-2" />
                   العمال
