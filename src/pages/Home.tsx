@@ -1,7 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User, Settings, Users, Briefcase } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -51,10 +51,10 @@ const Home = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <>
-                <div className="flex items-center gap-2 text-sm">
-                  <User className="w-4 h-4" />
-                  <span>{user.email}</span>
-                </div>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/workers')}>
+                  <Users className="w-4 h-4 ml-2" />
+                  العمال
+                </Button>
                 <Button variant="outline" size="sm" onClick={handleProfileClick}>
                   <Settings className="w-4 h-4 ml-2" />
                   البروفايل
@@ -126,12 +126,33 @@ const Home = () => {
           </div>
 
           {user && (
-            <Card className="p-8 mt-12">
-              <h3 className="text-2xl font-bold mb-4">مرحباً بك!</h3>
-              <p className="text-muted-foreground">
-                يمكنك الآن استخدام جميع خدمات المنصة. هذه البداية فقط، وسيتم إضافة المزيد من الميزات قريباً.
-              </p>
-            </Card>
+            <div className="grid md:grid-cols-2 gap-6 mt-12">
+              <Card className="p-8 hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">تصفح العمال</h3>
+                <p className="text-muted-foreground mb-4">
+                  اكتشف أفضل العمال المحترفين في جميع المجالات
+                </p>
+                <Button className="w-full" onClick={() => navigate('/workers')}>
+                  تصفح الآن
+                </Button>
+              </Card>
+
+              <Card className="p-8 hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Briefcase className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">ملفي الشخصي</h3>
+                <p className="text-muted-foreground mb-4">
+                  قم بإدارة معلوماتك ووثائقك الشخصية
+                </p>
+                <Button className="w-full" variant="outline" onClick={handleProfileClick}>
+                  الذهاب للبروفايل
+                </Button>
+              </Card>
+            </div>
           )}
         </div>
       </main>
