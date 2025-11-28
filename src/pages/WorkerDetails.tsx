@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, Briefcase, DollarSign, Phone, Shield, ArrowRight, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import CreateServiceRequest from '@/components/CreateServiceRequest';
 
 interface WorkerData {
   id: string;
@@ -267,7 +268,11 @@ const WorkerDetails = () => {
                   </div>
                 )}
 
-                <Button className="w-full" size="lg">
+                {user && user.id !== worker.user_id && (
+                  <CreateServiceRequest workerId={worker.user_id} />
+                )}
+
+                <Button className="w-full" size="lg" variant="outline">
                   <MessageCircle className="ml-2 h-5 w-5" />
                   تواصل الآن
                 </Button>
