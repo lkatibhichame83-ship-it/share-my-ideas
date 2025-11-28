@@ -1,7 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { LogOut, User, Settings, Users, Briefcase, Shield } from 'lucide-react';
+import { LogOut, User, Settings, Users, Briefcase, Shield, MessageCircle, FileText, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,7 +50,7 @@ const Home = () => {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             منصة الخدمات
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {user ? (
               <>
                 {isAdmin && (
@@ -62,6 +62,18 @@ const Home = () => {
                 <Button variant="ghost" size="sm" onClick={() => navigate('/workers')}>
                   <Users className="w-4 h-4 ml-2" />
                   العمال
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/service-requests')}>
+                  <FileText className="w-4 h-4 ml-2" />
+                  الطلبات
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/messages')}>
+                  <MessageCircle className="w-4 h-4 ml-2" />
+                  الرسائل
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/payments')}>
+                  <CreditCard className="w-4 h-4 ml-2" />
+                  المدفوعات
                 </Button>
                 <Button variant="outline" size="sm" onClick={handleProfileClick}>
                   <Settings className="w-4 h-4 ml-2" />
@@ -134,14 +146,14 @@ const Home = () => {
           </div>
 
           {user && (
-            <div className="grid md:grid-cols-2 gap-6 mt-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
               <Card className="p-8 hover:shadow-lg transition-shadow">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">تصفح العمال</h3>
                 <p className="text-muted-foreground mb-4">
-                  اكتشف أفضل العمال المحترفين في جميع المجالات
+                  اكتشف أفضل العمال المحترفين
                 </p>
                 <Button className="w-full" onClick={() => navigate('/workers')}>
                   تصفح الآن
@@ -150,14 +162,40 @@ const Home = () => {
 
               <Card className="p-8 hover:shadow-lg transition-shadow">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Briefcase className="w-8 h-8 text-primary" />
+                  <FileText className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">ملفي الشخصي</h3>
+                <h3 className="text-2xl font-bold mb-2">الطلبات</h3>
                 <p className="text-muted-foreground mb-4">
-                  قم بإدارة معلوماتك ووثائقك الشخصية
+                  إدارة طلبات الخدمة
                 </p>
-                <Button className="w-full" variant="outline" onClick={handleProfileClick}>
-                  الذهاب للبروفايل
+                <Button className="w-full" onClick={() => navigate('/service-requests')}>
+                  عرض الطلبات
+                </Button>
+              </Card>
+
+              <Card className="p-8 hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <MessageCircle className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">الرسائل</h3>
+                <p className="text-muted-foreground mb-4">
+                  تواصل مع الآخرين
+                </p>
+                <Button className="w-full" variant="outline" onClick={() => navigate('/messages')}>
+                  الرسائل
+                </Button>
+              </Card>
+
+              <Card className="p-8 hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <CreditCard className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">المدفوعات</h3>
+                <p className="text-muted-foreground mb-4">
+                  إدارة معاملاتك المالية
+                </p>
+                <Button className="w-full" variant="outline" onClick={() => navigate('/payments')}>
+                  عرض المدفوعات
                 </Button>
               </Card>
             </div>
