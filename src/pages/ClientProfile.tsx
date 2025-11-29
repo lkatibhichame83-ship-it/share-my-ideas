@@ -24,12 +24,10 @@ const ClientProfile = () => {
   });
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate('/login');
-    } else if (user) {
+    if (user) {
       loadProfile();
     }
-  }, [user, authLoading, navigate]);
+  }, [user]);
 
   const loadProfile = async () => {
     try {
@@ -87,8 +85,12 @@ const ClientProfile = () => {
     }
   };
 
-  if (authLoading) {
-    return <div className="min-h-screen flex items-center justify-center">جاري التحميل...</div>;
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (

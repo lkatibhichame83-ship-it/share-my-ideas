@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import SelectAccountType from "./pages/SelectAccountType";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -34,12 +35,12 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/workers" element={<WorkerList />} />
             <Route path="/worker/:userId" element={<WorkerDetails />} />
-            <Route path="/worker-profile" element={<WorkerProfile />} />
-            <Route path="/client-profile" element={<ClientProfile />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/service-requests" element={<ServiceRequests />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/payments" element={<Payments />} />
+            <Route path="/worker-profile" element={<ProtectedRoute><WorkerProfile /></ProtectedRoute>} />
+            <Route path="/client-profile" element={<ProtectedRoute><ClientProfile /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/service-requests" element={<ProtectedRoute><ServiceRequests /></ProtectedRoute>} />
+            <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+            <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
