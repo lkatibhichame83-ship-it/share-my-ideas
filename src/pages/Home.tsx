@@ -6,12 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdminCheck } from '@/hooks/useAdminCheck';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
+import { NotificationBell } from '@/components/NotificationBell';
 
 const Home = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { isAdmin } = useAdminCheck();
   const [accountType, setAccountType] = useState<string | null>(null);
+  
+  // تفعيل الإشعارات real-time
+  useRealtimeNotifications();
 
   useEffect(() => {
     if (user) {
@@ -53,6 +58,7 @@ const Home = () => {
           <div className="flex items-center gap-2">
             {user ? (
               <>
+                <NotificationBell />
                 {isAdmin && (
                   <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>
                     <Shield className="w-4 h-4 ml-2" />

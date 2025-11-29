@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Clock, CheckCircle, XCircle, DollarSign, MessageCircle, ArrowRight } from 'lucide-react';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 
 interface ServiceRequest {
   id: string;
@@ -41,6 +42,9 @@ const ServiceRequests = () => {
   const [accountType, setAccountType] = useState<'worker' | 'client' | null>(null);
   const [selectedTab, setSelectedTab] = useState('all');
 
+  // تفعيل الإشعارات real-time
+  useRealtimeNotifications();
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -48,6 +52,26 @@ const ServiceRequests = () => {
     }
     loadAccountType();
     fetchRequests();
+
+    // الاستماع لتحديثات الطلبات في الوقت الفعلي
+    const channel = supabase
+      .channel('service-requests-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'service_requests',
+        },
+        () => {
+          fetchRequests();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   const loadAccountType = async () => {

@@ -10,6 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Send, ArrowRight, MessageCircle } from 'lucide-react';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 
 interface Message {
   id: string;
@@ -40,6 +41,9 @@ const Messages = () => {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // تفعيل الإشعارات real-time
+  useRealtimeNotifications();
 
   useEffect(() => {
     if (!user) {
