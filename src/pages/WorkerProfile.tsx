@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ImageUpload';
 import { DocumentUpload } from '@/components/DocumentUpload';
-import { ArrowRight, Save, Star } from 'lucide-react';
+import { ArrowRight, Save, Star, BarChart3 } from 'lucide-react';
 
 const WorkerProfile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -146,10 +146,18 @@ const WorkerProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-background">
       <nav className="border-b bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Button variant="ghost" onClick={() => navigate('/')}>
             <ArrowRight className="w-4 h-4 ml-2" />
             العودة للرئيسية
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/worker-stats')}
+            className="gap-2"
+          >
+            <BarChart3 className="w-4 h-4" />
+            لوحة الإحصائيات
           </Button>
         </div>
       </nav>
