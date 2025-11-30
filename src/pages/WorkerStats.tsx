@@ -5,10 +5,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowRight, TrendingUp, DollarSign, Star, CheckCircle, Calendar } from 'lucide-react';
+import { ArrowRight, TrendingUp, DollarSign, Star, CheckCircle, Calendar, FileDown, FileSpreadsheet } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { ar } from 'date-fns/locale';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 interface MonthlyData {
   month: string;
@@ -187,6 +190,146 @@ const WorkerStats = () => {
     );
   }
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    
+    // Add Arabic font support (using default font for simplicity)
+    doc.setFont('helvetica');
+    
+    // Title
+    doc.setFontSize(20);
+    doc.text('Worker Statistics Report', 105, 20, { align: 'center' });
+    
+    // Date
+    doc.setFontSize(10);
+    doc.text(`Generated: ${format(new Date(), 'yyyy-MM-dd HH:mm')}`, 105, 30, { align: 'center' });
+    
+    // Summary Statistics
+    doc.setFontSize(14);
+    doc.text('Summary', 14, 45);
+    
+    const summaryData = [
+      ['Total Completed Requests', stats.totalCompleted.toString()],
+      ['Total Earnings', `${stats.totalEarnings.toFixed(2)} AED`],
+      ['Average Rating', `${stats.averageRating} / 5`],
+      ['Total Reviews', stats.totalReviews.toString()],
+    ];
+    
+    autoTable(doc, {
+      startY: 50,
+      head: [['Metric', 'Value']],
+      body: summaryData,
+      theme: 'grid',
+      headStyles: { fillColor: [147, 51, 234] },
+    });
+    
+    // Monthly Data
+    doc.setFontSize(14);
+    const finalY = (doc as any).lastAutoTable.finalY || 100;
+    doc.text('Monthly Performance', 14, finalY + 15);
+    
+    const monthlyTableData = stats.monthlyData.map(item => [
+      item.month,
+      item.completedRequests.toString(),
+      `${item.earnings.toFixed(2)} AED`,
+      `${item.averageRating} ★`,
+    ]);
+    
+    autoTable(doc, {
+      startY: finalY + 20,
+      head: [['Month', 'Completed', 'Earnings', 'Rating']],
+      body: monthlyTableData,
+      theme: 'grid',
+      headStyles: { fillColor: [147, 51, 234] },
+    });
+    
+    // Status Breakdown
+    if (stats.statusBreakdown.length > 0) {
+      const finalY2 = (doc as any).lastAutoTable.finalY || 180;
+      doc.setFontSize(14);
+      doc.text('Status Breakdown', 14, finalY2 + 15);
+      
+      const statusTableData = stats.statusBreakdown.map(item => [
+        item.name,
+        item.value.toString(),
+      ]);
+      
+      autoTable(doc, {
+        startY: finalY2 + 20,
+        head: [['Status', 'Count']],
+        body: statusTableData,
+        theme: 'grid',
+        headStyles: { fillColor: [147, 51, 234] },
+      });
+    }
+    
+    // Save the PDF
+    doc.save(`worker-stats-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+    
+    toast({
+      title: 'تم التصدير',
+      description: 'تم تصدير التقرير بصيغة PDF بنجاح',
+    });
+  };
+
+  const exportToExcel = () => {
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Summary Sheet
+    const summaryData = [
+      ['Worker Statistics Report'],
+      ['Generated:', format(new Date(), 'yyyy-MM-dd HH:mm')],
+      [],
+      ['Summary Statistics'],
+      ['Metric', 'Value'],
+      ['Total Completed Requests', stats.totalCompleted],
+      ['Total Earnings (AED)', stats.totalEarnings.toFixed(2)],
+      ['Average Rating', stats.averageRating],
+      ['Total Reviews', stats.totalReviews],
+    ];
+    
+    const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+    XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary');
+    
+    // Monthly Data Sheet
+    const monthlyData = [
+      ['Monthly Performance'],
+      [],
+      ['Month', 'Completed Requests', 'Earnings (AED)', 'Average Rating'],
+      ...stats.monthlyData.map(item => [
+        item.month,
+        item.completedRequests,
+        item.earnings.toFixed(2),
+        item.averageRating,
+      ]),
+    ];
+    
+    const monthlyWs = XLSX.utils.aoa_to_sheet(monthlyData);
+    XLSX.utils.book_append_sheet(wb, monthlyWs, 'Monthly Data');
+    
+    // Status Breakdown Sheet
+    if (stats.statusBreakdown.length > 0) {
+      const statusData = [
+        ['Status Breakdown'],
+        [],
+        ['Status', 'Count'],
+        ...stats.statusBreakdown.map(item => [item.name, item.value]),
+      ];
+      
+      const statusWs = XLSX.utils.aoa_to_sheet(statusData);
+      XLSX.utils.book_append_sheet(wb, statusWs, 'Status Breakdown');
+    }
+    
+    // Save the file
+    XLSX.writeFile(wb, `worker-stats-${format(new Date(), 'yyyy-MM-dd')}.xlsx`);
+    
+    toast({
+      title: 'تم التصدير',
+      description: 'تم تصدير التقرير بصيغة Excel بنجاح',
+    });
+  };
+
   if (!stats) {
     return null;
   }
@@ -204,13 +347,34 @@ const WorkerStats = () => {
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              لوحة الإحصائيات
-            </h1>
-            <p className="text-muted-foreground">
-              تحليل شامل لأدائك ونشاطك على المنصة
-            </p>
+          <div className="text-center space-y-4">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                لوحة الإحصائيات
+              </h1>
+              <p className="text-muted-foreground">
+                تحليل شامل لأدائك ونشاطك على المنصة
+              </p>
+            </div>
+            
+            <div className="flex justify-center gap-3">
+              <Button 
+                onClick={exportToPDF}
+                variant="outline"
+                className="gap-2"
+              >
+                <FileDown className="w-4 h-4" />
+                تصدير PDF
+              </Button>
+              <Button 
+                onClick={exportToExcel}
+                variant="outline"
+                className="gap-2"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                تصدير Excel
+              </Button>
+            </div>
           </div>
 
           {/* Summary Cards */}
