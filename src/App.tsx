@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ServiceRequests from "./pages/ServiceRequests";
 import Messages from "./pages/Messages";
 import Payments from "./pages/Payments";
+import WorkerStats from "./pages/WorkerStats";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/service-requests" element={<ProtectedRoute><ServiceRequests /></ProtectedRoute>} />
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
             <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
+            <Route path="/worker-stats" element={<ProtectedRoute><WorkerStats /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
