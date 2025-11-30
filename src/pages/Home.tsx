@@ -153,6 +153,21 @@ const Home = () => {
 
           {user && (
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+              {isAdmin && (
+                <Card className="p-8 hover:shadow-lg transition-shadow border-2 border-primary">
+                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                    <Shield className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">لوحة المدير</h3>
+                  <p className="text-muted-foreground mb-4">
+                    إدارة المنصة والمستخدمين
+                  </p>
+                  <Button className="w-full" onClick={() => navigate('/admin')}>
+                    لوحة التحكم
+                  </Button>
+                </Card>
+              )}
+
               <Card className="p-8 hover:shadow-lg transition-shadow">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-primary" />
