@@ -14,6 +14,7 @@ import ClientProfile from "./pages/ClientProfile";
 import WorkerList from "./pages/WorkerList";
 import WorkerDetails from "./pages/WorkerDetails";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminStats from "./pages/AdminStats";
 import ServiceRequests from "./pages/ServiceRequests";
 import Messages from "./pages/Messages";
 import Payments from "./pages/Payments";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/worker-profile" element={<ProtectedRoute><WorkerProfile /></ProtectedRoute>} />
             <Route path="/client-profile" element={<ProtectedRoute><ClientProfile /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
             <Route path="/service-requests" element={<ProtectedRoute><ServiceRequests /></ProtectedRoute>} />
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
             <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
