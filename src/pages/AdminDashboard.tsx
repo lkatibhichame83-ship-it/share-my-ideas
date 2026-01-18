@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { AdminNotificationBell } from '@/components/AdminNotificationBell';
 import {
   Users,
   FileText,
@@ -214,7 +215,8 @@ const AdminDashboard = () => {
             <Shield className="h-6 w-6 text-primary" />
             لوحة تحكم المدير
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <AdminNotificationBell />
             <Button variant="outline" onClick={() => navigate('/admin/stats')}>
               <BarChart3 className="ml-2 h-4 w-4" />
               الإحصائيات التفصيلية
