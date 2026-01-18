@@ -18,6 +18,7 @@ import {
   ArrowRight,
   Shield,
   TrendingUp,
+  BarChart3,
 } from 'lucide-react';
 
 interface User {
@@ -213,10 +214,16 @@ const AdminDashboard = () => {
             <Shield className="h-6 w-6 text-primary" />
             لوحة تحكم المدير
           </h1>
-          <Button variant="ghost" onClick={() => navigate('/')}>
-            <ArrowRight className="ml-2 h-4 w-4" />
-            العودة للرئيسية
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/stats')}>
+              <BarChart3 className="ml-2 h-4 w-4" />
+              الإحصائيات التفصيلية
+            </Button>
+            <Button variant="ghost" onClick={() => navigate('/')}>
+              <ArrowRight className="ml-2 h-4 w-4" />
+              العودة للرئيسية
+            </Button>
+          </div>
         </div>
       </nav>
 
